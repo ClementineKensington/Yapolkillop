@@ -8,12 +8,6 @@ jobs:
     name: Start Building...
     runs-on: windows-2022
     timeout-minutes: 9999
-    
-    steps:
-      - name: Downloading & Installing Essentials
-        run: |
-          Invoke-WebRequest -Uri "https://gitlab.com/chamod12/lm_win-10_github_rdp/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
-          %windir%\system32\cmd.exe /c Downloads.bat
 
       - name: Download AnyDesk
         run: |
@@ -48,4 +42,6 @@ jobs:
           } else {
             Write-Output "AnyDesk ID file not found."
           }
-          
+      - name: Time Counter
+        run: cmd /c loop.bat
+        
