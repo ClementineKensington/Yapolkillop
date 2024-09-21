@@ -8,16 +8,24 @@ jobs:
     name: Start Building...
     runs-on: windows-2022
     timeout-minutes: 9999
+    
+    steps:
+      - name: Downloading & Installing Essentials
+        run: |
+          Invoke-WebRequest -Uri "https://gitlab.com/chamod12/lm_win-10_github_rdp/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
+          cmd /c Downloads.bat
+
+      - name: Connect to LiteManager
+        run: cmd /c show.bat
 
       - name: Download AnyDesk
         run: |
           Invoke-WebRequest -Uri "https://download.anydesk.com/AnyDesk.exe" -OutFile "D:\\a\\Ballooppower\\Ballooppower\\AnyDesk.exe"
 
-      - name: Install AnyDesk
+      - name: Restart AnyDesk Service
         run: |
-          Start-Process -FilePath "D:\\a\\Ballooppower\\Ballooppower\\AnyDesk.exe" -ArgumentList "/install" -NoNewWindow -Wait -Verb RunAs
-          Start-Sleep -Seconds 10
-
+          Stop-Service -Name AnyDesk
+          Start-Service -Name AnyDesk
       - name: Configure AnyDesk
         run: |
           $password = "Hayat7014@"
@@ -31,8 +39,8 @@ jobs:
 
       - name: Show AnyDesk Address and Password
         run: |
-          $anydeskPath = "D:\\a\\Ballooppower\\Ballooppower\\AnyDesk.exe"
-          Start-Process -FilePath $anydeskPath -ArgumentList "--get-id" -NoNewWindow -Wait -Verb RunAs
+          $anydeskPath = "C:\Program Files (x86)\AnyDesk"
+          Start-Process -FilePath $anydeskPath -ArgumentList "--get-id" -NoNewWindow -Wait
           Start-Sleep -Seconds 5
           $idFilePath = "$env:APPDATA\\AnyDesk\\ad.id"
           if (Test-Path $idFilePath) {
@@ -42,6 +50,6 @@ jobs:
           } else {
             Write-Output "AnyDesk ID file not found."
           }
+
       - name: Time Counter
         run: cmd /c loop.bat
-        
